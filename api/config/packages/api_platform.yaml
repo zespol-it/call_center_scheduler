@@ -14,5 +14,15 @@ api_platform:
         extra_properties:
             standard_put: true
             rfc_7807_compliant_errors: true
+        pagination_items_per_page: 30
+        normalization_context:
+            enable_max_depth: true
+            groups: ['read']
+        denormalization_context:
+            groups: ['write']
     keep_legacy_inflector: false
     use_symfony_listeners: true
+    eager_loading:
+        max_joins: 10
+        fetch_partial: true
+        force_eager: false

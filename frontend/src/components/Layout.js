@@ -18,6 +18,7 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   CalendarMonth as CalendarIcon,
+  People as PeopleIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -115,6 +116,14 @@ function Layout({ children }) {
                 <CalendarIcon />
               </ListItemIcon>
               <ListItemText primary="Scheduler" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton onClick={() => navigate('/agents')}>
+              <ListItemIcon>
+                <PeopleIcon />
+              </ListItemIcon>
+              <ListItemText primary="Agents" />
             </ListItemButton>
           </ListItem>
         </List>

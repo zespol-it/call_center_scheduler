@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Layout from './components/Layout';
 import Scheduler from './pages/Scheduler';
+import Agents from './pages/Agents';
 
 const theme = createTheme({
   palette: {
@@ -26,6 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Scheduler />} />
             <Route path="/scheduler" element={<Scheduler />} />
+            <Route path="/agents" element={<Agents />} />
           </Routes>
         </Layout>
       </Router>

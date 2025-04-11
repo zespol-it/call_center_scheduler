@@ -22,7 +22,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Put(),
         new Delete(),
     ],
-    normalizationContext: ['groups' => ['queue:read']],
+    normalizationContext: ['groups' => ['queue:read'], 'enable_max_depth' => true],
     denormalizationContext: ['groups' => ['queue:write']]
 )]
 class Queue
@@ -34,7 +34,7 @@ class Queue
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['queue:read', 'queue:write', 'shift:read'])]
+    #[Groups(['queue:read', 'queue:write'])]
     private ?string $name = null;
 
     #[ORM\ManyToMany(targetEntity: Agent::class, mappedBy: 'queues')]
