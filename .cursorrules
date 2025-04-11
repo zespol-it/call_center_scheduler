@@ -1,0 +1,75 @@
+project:
+  name: callcenter-scheduler
+  backend: api-platform
+  frontend: react
+  database: mysql
+
+resources:
+  - name: Agent
+    fields:
+      - name: name
+        type: string
+      - name: queues
+        type: relation
+        relation: Queue[]
+      - name: availability
+        type: json
+      - name: efficiency
+        type: json
+
+  - name: Queue
+    fields:
+      - name: name
+        type: string
+
+  - name: Shift
+    fields:
+      - name: agent
+        type: relation
+        relation: Agent
+      - name: queue
+        type: relation
+        relation: Queue
+      - name: startTime
+        type: datetime
+      - name: endTime
+        type: datetime
+
+  - name: DemandForecast
+    fields:
+      - name: queue
+        type: relation
+        relation: Queue
+      - name: timestamp
+        type: datetime
+      - name: expectedCalls
+        type: integer
+
+  - name: ScheduleRequest
+    fields:
+      - name: startDate
+        type: date
+      - name: endDate
+        type: date
+      - name: status
+        type: enum
+        enumValues: [pending, in_progress, completed, failed]
+      - name: result
+        type: json
+
+pages:
+  - name: Scheduler
+    route: /scheduler
+    layout: sidebar
+    components:
+      - type: date-picker
+        label: Select week
+      - type: table
+        resource: Shift
+        columns: [agent.name, queue.name, startTime, endTime]
+      - type: chart
+        resource: DemandForecast
+        chartType: bar
+        x: timestamp
+        y: expectedCalls
+        groupBy: queue.name
