@@ -1,16 +1,17 @@
-FROM node:18-alpine
+FROM node:18-alpine as build
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm install
-RUN npm install react-datepicker@4.10.0
+RUN npm ci
 
 COPY . .
+RUN npm run build
 
-EXPOSE 3000
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-ENV NODE_ENV=development
-ENV CHOKIDAR_USEPOLLING=true
+EXPOSE 80
 
-CMD ["npm", "start"] 
+CMD ["nginx", "-g", "daemon off;"] 
