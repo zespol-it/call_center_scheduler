@@ -1,0 +1,14 @@
+[build]
+builder = "nixpacks"
+buildCommand = "docker compose build"
+
+[deploy]
+startCommand = "docker compose up -d"
+healthcheckPath = "/"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 10
+
+[deploy.env]
+NODE_ENV = "production"
+REACT_APP_API_URL = "https://callcenter-api.up.railway.app" 
