@@ -1,6 +1,5 @@
 # PHP
 /vendor/
-.env
 .phpunit.result.cache
 /var/
 /public/bundles/

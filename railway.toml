@@ -1,15 +1,19 @@
 [build]
 builder = "nixpacks"
-buildCommand = "apt-get update && apt-get install -y php8.2 php8.2-curl php8.2-mbstring php8.2-xml php8.2-zip"
+buildCommand = "apt-get update && apt-get install -y software-properties-common wget git && add-apt-repository ppa:ondrej/php && apt-get update && apt-get install -y php8.2 php8.2-curl php8.2-mbstring php8.2-xml php8.2-zip php8.2-pdo php8.2-mysql && wget -O /usr/local/bin/composer https://getcomposer.org/composer-stable.phar && chmod +x /usr/local/bin/composer && mkdir -p /srv/api/public"
 
 [deploy]
-startCommand = "cd /app/api && php -S 0.0.0.0:8000 -t public"
-healthcheckPath = "/"
-healthcheckTimeout = 100
+startCommand = "cd /srv/api && composer install --no-interaction --no-dev --optimize-autoloader && echo \"APP_ENV=prod\nAPP_DEBUG=0\nDATABASE_URL=mysql://root:mViYpBkZTMRTnRfqXkWbAvETHPdApGZq@tramway.proxy.rlwy.net:44851/railway\nCORS_ALLOW_ORIGIN=https://callcenter.up.railway.app\" > .env && php -S 0.0.0.0:8000 -t public"
+healthcheckPath = "/index.php"
+healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
 [deploy.env]
 NODE_ENV = "production"
-REACT_APP_API_URL = "https://callcenter-api.up.railway.app"
-PHP_VERSION = "8.2" 
+REACT_APP_API_URL = "https://callcenterbackend-production.up.railway.app"
+PHP_VERSION = "8.2"
+APP_ENV = "prod"
+APP_DEBUG = "0"
+DATABASE_URL = "mysql://root:mViYpBkZTMRTnRfqXkWbAvETHPdApGZq@tramway.proxy.rlwy.net:44851/railway"
+CORS_ALLOW_ORIGIN = "https://callcenter.up.railway.app"
