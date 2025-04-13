@@ -1,27 +1,32 @@
 #!/bin/bash
 
-# Install Railway CLI if not installed
+# Check if Railway CLI is installed
 if ! command -v railway &> /dev/null; then
     echo "Installing Railway CLI..."
     npm install -g @railway/cli
 fi
 
 # Login to Railway
+echo "Logging in to Railway..."
 railway login
 
-# Create new project if not exists
-railway init
+# Initialize project if it doesn't exist
+if ! railway connect | grep -q "cc1"; then
+    echo "Creating new project..."
+    railway init
+fi
 
 # Set environment variables
-railway variables set \
-    REACT_APP_API_URL="https://callcenter-api.up.railway.app" \
-    CORS_ALLOW_ORIGIN="https://callcenter.up.railway.app" \
-    MYSQL_DATABASE="app" \
-    MYSQL_USER="app" \
-    MYSQL_PASSWORD="$(openssl rand -base64 32)" \
-    MYSQL_ROOT_PASSWORD="$(openssl rand -base64 32)"
+echo "Setting environment variables..."
+railway variables \
+    REACT_APP_API_URL=https://callcenter-api.up.railway.app \
+    CORS_ALLOW_ORIGIN=https://callcenter.up.railway.app \
+    APP_ENV=prod \
+    APP_DEBUG=0 \
+    PHP_VERSION=8.2
 
-# Deploy to Railway
+# Deploy the application
+echo "Deploying application..."
 railway up
 
-echo "Deployment completed! Check your Railway dashboard for the deployment status." 
+echo "Deployment complete! Check your Railway dashboard for the deployment status." 

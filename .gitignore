@@ -27,4 +27,9 @@ yarn-error.log*
 *.swo
 
 # Docker
-docker/mysql_data/ 
+docker/mysql_data/
+
+# Deployment
+deploy/
+*.pem
+deploy-ssh.sh 

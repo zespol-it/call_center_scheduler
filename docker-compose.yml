@@ -1,47 +1,47 @@
 version: '3.8'
 
 services:
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    ports:
-      - "8001:8000"
-    volumes:
-      - ./api:/srv/api
-    environment:
-      - DATABASE_URL=mysql://db_user:db_password@mysql:3306/callcenter?serverVersion=8.0
-      - APP_ENV=dev
-      - APP_DEBUG=1
-      - CORS_ALLOW_ORIGIN=http://localhost:3000
-    depends_on:
-      - mysql
-
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - REACT_APP_API_URL=http://localhost:8001
+      - "80:80"
     depends_on:
       - api
+    environment:
+      - REACT_APP_API_URL=${REACT_APP_API_URL}
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    environment:
+      - APP_ENV=prod
+      - APP_DEBUG=0
+      - CORS_ALLOW_ORIGIN=${CORS_ALLOW_ORIGIN}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./api:/srv/api
+    restart: unless-stopped
 
   mysql:
     image: mysql:8.0
-    ports:
-      - "3306:3306"
     environment:
-      - MYSQL_DATABASE=callcenter
-      - MYSQL_USER=db_user
-      - MYSQL_PASSWORD=db_password
-      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
 
 volumes:
   mysql_data: 
