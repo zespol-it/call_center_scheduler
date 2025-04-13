@@ -18,11 +18,10 @@ WORKDIR /srv/api
 COPY composer.json composer.lock ./
 RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest
 
-RUN php bin/console assets:install --symlink --relative
-
 COPY . .
 
 RUN composer dump-autoload --optimize
+
 
 EXPOSE 8000
 
