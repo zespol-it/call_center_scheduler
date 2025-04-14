@@ -3,13 +3,10 @@ builder = "nixpacks"
 buildCommand = "npm install && npm run build"
 
 [deploy]
-startCommand = "nginx -g 'daemon off;'"
-healthcheckPath = "/"
-healthcheckTimeout = 300
+startCommand = "npx serve -s build"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
 
 [deploy.env]
 NODE_ENV = "production"
-REACT_APP_API_URL = "https://callcenterbackend-production.up.railway.app"
-PORT = "3000" 
+REACT_APP_API_URL = "https://callcenterfront-production.up.railway.app"
