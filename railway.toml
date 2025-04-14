@@ -1,15 +1,13 @@
 [build]
 builder = "nixpacks"
 buildCommand = "cd frontend && npm install && npm run build"
+dockerfilePath = "frontend/Dockerfile"
 
 [deploy]
-startCommand = "cd frontend && npm run serve"
-healthcheckPath = "/health"
-healthcheckTimeout = 5
+startCommand = "npx serve -s build"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
 
 [deploy.env]
-PORT = "8000"
 NODE_ENV = "production"
 REACT_APP_API_URL = "https://callcenterbackend-production.up.railway.app"
