@@ -26,7 +26,6 @@ RUN composer dump-autoload --optimize
 
 RUN php bin/console doctrine:migrations:migrate --no-interaction
 
-RUN php bin/console doctrine:fixtures:load --no-interaction
 
 EXPOSE 8000
 
