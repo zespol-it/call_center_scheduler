@@ -20,8 +20,9 @@ RUN composer install --prefer-dist --no-dev --no-scripts --no-progress --no-sugg
 
 COPY . .
 
-RUN composer dump-autoload --optimize
+RUN php bin/console assets:install --symlink --relative
 
+RUN composer dump-autoload --optimize
 
 EXPOSE 8000
 
