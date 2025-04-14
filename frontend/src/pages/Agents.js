@@ -3,7 +3,7 @@ import { Box, Container, Paper, Typography, Table, TableBody, TableCell, TableCo
 import { useQuery } from 'react-query';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://callcenterbackend-production.up.railway.app';
+const API_URL = process.env.REACT_APP_API_URL || 'https://callcenterbackend-production.up.railway.app';
 
 const Agents = () => {
   const { data: agents, isLoading } = useQuery(
