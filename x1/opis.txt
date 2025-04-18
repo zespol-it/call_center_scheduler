@@ -1,0 +1,71 @@
+Masz przed sobą prosty system do budowy agentów AI. Twoim zadaniem jest zbudowanie dwóch narzędzi, które będą używane przez agenta oraz zdefiniowanie prompta, który będzie kierował zachowaniem agenta.
+
+Cel gry
+Celem gry jest przygotowanie agenta, który wykorzystując dwa narzędzia, będzie w stanie wykonać zadanie:
+
+"Wymień członków zespołu prowadzącego badania nad podróżami w czasie na jednej z polskich uczelni. Podaj nazwę tej uczelni oraz sponsora tych badań"
+
+Odpowiedź musi zostać wygenerowana na podstawie dostarczonych danych źródłowych. Będzie to od Ciebie wymagało stworzenia dwóch narzędzi (API), z których agent będzie mógł korzystać.
+
+Pobierz dane źródłowe
+Oto Twoja lista zadań:
+
+Przygotuj prompta definiującego zachowanie agenta
+Zdefiniuj dwa narzędzia przez podanie webhooków (URL po HTTPS/HTTP)
+Uruchom agenta i obserwuj jego działanie
+Analizuj i udoskonalaj prompta w celu poprawy efektywności
+Gdy uda Ci się wykonać zadanie, otrzymasz nagrodę
+Przygotowanie agenta
+Tworzenie agenta rozpoczniesz od napisania prompta startowego. Na pewno będzie konieczne zawarcie w nim informacji, na jakie pytanie ma odpowiedzieć, więc to zdanie już za Ciebie napisaliśmy.
+
+W kolejnych krokach instrukcji musisz powiadomić agenta o istnieniu dwóch narzędzi z których może on korzystać. Nazwaliśmy je tool1 oraz tool2.
+
+Twój agent zawsze musi zwracać poprawną odpowiedź w formacie JSON.
+
+  {
+    "action":"akcja",
+    "value":"nazwa narzędzia",
+    "params":"opcjonalne parametry"
+  }
+AKCJA — tutaj masz do wyboru opcję usetool lub answer. Pierwszej używasz, gdy agent ma wykorzystać narzędzie (tool1 lub tool2), drugiej, gdy masz już odpowiedź na pytanie. Udzielenie odpowiedzi kończy cały algorytm, więc możesz tej opcji użyć tylko jeden raz.
+
+NAZWA NARZĘDZIA — to nazwa narzędzia, które zdefiniowałeś. Może być to tool1 lub tool2.
+
+PARAMETRY — to opcjonalne parametry, które mogą być używane przez narzędzie. W zadaniu nie są one wymagane, ale możesz je użyć, jeśli narzędzie ich wymaga. To pole jest zawsze sprawdzane, ale może być pustym stringiem.
+
+Oto przykład użycia narzędzia tool1. Załóżmy, że to narzędzie to np. wyszukiwarka miast, więc jako parametr podajemy nazwę miasta.
+
+  {
+    "action":"usetool",
+    "value":"tool1",
+    "params":"Kraków"
+  }
+    
+Twoje narzędzia muszą przyjmować dane i udzielać odpowiedzi w formacie JSON.
+
+Budowa webhooków
+Twoje narzędzia muszą być dostępne pod publicznie dostępnym po HTTPS adresem URL.
+Webhook przyjmuje dane w formacie JSON. Parametry wejściowe są w polu input.
+Odpowiedź zwracana jest w polu output.
+Webhooki są testowane przed użyciem. Automat wysyła do nich w polu "input" słowo "test" z losowymi cyframi na końcu (np. "test123"). Twój webhook musi odpowiedzieć dokładnie tym samym tekstem, ale w polu "output".
+Przykład weryfikacji webhooka
+Gdy dodajesz nowy adres URL, jest on weryfikowany przez automat w poniższy sposób.
+
+Twój webhook otrzymuje:
+
+  {
+    "input":"test123"
+  }
+Twoja odpowiedź musi być:
+
+  {
+    "output":"test123"
+  }
+W procesie weryfikacji webhooka zawsze odpowiadasz otrzymanym tekstem.
+
+Ograniczenia
+Pracujesz z modelem GPT-4o-mini
+Maksymalna długość prompta to 2048 znaków
+Maksymalna długość odpowiedzi webhooka to 1024 znaki (nie możesz więc zwrócić całych JSONów ze źródła danych)
+Maksymalna liczba kroków algorytmu to 5 sztuk (jedno wykonanie prompta na start + maksymalnie 3 wywołania narzędzi + udzielenie odpowiedzi)
+Maksymalny czas oczekiwania na odpowiedź webhooka to 60 sekund
